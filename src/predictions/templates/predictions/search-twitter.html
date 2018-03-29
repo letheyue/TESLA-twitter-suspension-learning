@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block base_head %}
+     <link rel='stylesheet' href='{% static "css/main.css" %}'>
+{% endblock %}
+
+{% block content %}
+    <div class="block social-block social-twitter">
+        {% load twitter_tags %}
+        <ul>
+            {% for tweet in tweets %}
+            <li>
+                <div class="tweet-meta">
+                    <a href="https://www.twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_blank">
+                        <img src="{{ tweet.user.profile_image_url }}" width="32" height="32" />
+                        <h2>{{ tweet.user.name }}<br /><span>@{{ tweet.user.screen_name }} &middot; {{ tweet.created_at|twitter_date }}</span></h2>
+                    </a>
+                </div>
+                <p>{{ tweet|expand_tweet_urls|urlize_tweet_text }}</p>
+            </li>
+            {% endfor %}
+
+        </ul>
+        <a href="#" class="btn btn-round btn-red"></a>
+    </div>
+
+{% endblock%}
