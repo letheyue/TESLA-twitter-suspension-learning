@@ -30,7 +30,13 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+lib/*
+!lib/python3.6
+lib/python3.6/*
+!lib/python3.6/site-packages
+lib/python3.6/site-packages/*
+!lib/python3.6/site-packages/twitter
+!lib/python3.6/site-packages/tweepy
 lib64/
 parts/
 sdist/
