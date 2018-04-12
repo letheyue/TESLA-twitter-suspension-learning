@@ -119,3 +119,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# ignore data .csv
+*.csv
