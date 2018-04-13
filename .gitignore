@@ -122,3 +122,7 @@ ENV/
 
 # ignore data .csv
 *.csv
+
+# ignore the classifier
+src/predictions/classifier/
+test/classifier/
