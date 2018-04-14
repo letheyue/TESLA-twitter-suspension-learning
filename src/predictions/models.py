@@ -83,7 +83,7 @@ def get_user(user_id=None, screen_name=None):
     Description_length = len(description_pre)
     
     # feature Average tweet per day
-    Average_tweets_per_day = Total_status_count / float(Account_age)
+    # Average_tweets_per_day = Total_status_count / float(Account_age)
 
     feature = pd.DataFrame(index=[0])
     feature['favorite_count'] = Count_of_favorite_tweets
