@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import ListView
+import json
 
 
-from .models import get_tweets
+from .models import get_predict
 
 class SearchTwitterView(ListView):
 
@@ -15,7 +16,8 @@ class SearchTwitterView(ListView):
 		if query is not None:
 			print(query)
 			context= {}
-			context['tweets'] = get_tweets(str(query))
+			json_ = get_predict(str(query))
+			context['basic_info'] = json.loads(json_)
 			return context
 
 	def get_queryset(self, *args, **kwargs):
@@ -25,7 +27,7 @@ class SearchTwitterView(ListView):
 		if query is not None:
 			print(query)
 			context= {}
-			context['tweets'] = get_tweets(str(query))
+			context['basic_info'] = get_predict(str(query))
 			return context
 
 

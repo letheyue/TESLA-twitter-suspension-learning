@@ -1,8 +1,12 @@
 from django.db import models
 import twitter
 import time
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.externals import joblib
+import json
 
 from .ignore import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET
 
@@ -20,53 +24,81 @@ def get_tweets(screen_name):
     return api.GetUserTimeline(screen_name=screen_name, exclude_replies=True, include_rts=False)  # includes entities    
 
 def get_user(user_id=None, screen_name=None):
-	json = api.GetUser(user_id=user_id, screen_name=screen_name, include_entities=True, return_json=False)
-	json_data = json._json
+    json = api.GetUser(user_id=user_id, screen_name=screen_name, include_entities=True, return_json=False)
+    json_data = json._json
+    
+    # feature Count of favorite tweets
+    Count_of_favorite_tweets = int(json_data['favourites_count'])
+    # feature Friends to follower ratio
+    Friends_to_follower_ratio = float(round(float(json_data['friends_count']) / json_data['followers_count'],6))
+    # feature Total status count
+    Total_status_count = int(json_data['statuses_count'])
+    
+    # feature Default profile image & Default profile
+    # def_p_na','def_p_false','def_p_true'
+    if json_data['default_profile_image'] == 'FALSE':
+        Def_p_img_false = 1.0
+        Def_p_img_true = 0.0
+        Def_p_img_na = 0.0
+    elif json_data['default_profile_image'] == 'True':
+        Def_p_img_false = 0.0
+        Def_p_img_true = 1.0
+        Def_p_img_na = 0.0
+    else:
+        Def_p_img_false = 0.0
+        Def_p_img_true = 0.0
+        Def_p_img_na = 1.0
 
-	Count_of_favorite_tweets = int(json_data['favourites_count'])
-	Friends_to_follower_ratio = float(json_data['friends_count']) / json_data['followers_count']
-	Total_status_count = int(json_data['statuses_count'])
+    if json_data['default_profile'] == 'FALSE':
+        Def_p_false = 1.0
+        Def_p_true = 0.0
+        Def_p_na = 0.0
+    elif json_data['default_profile'] == 'True':
+        Def_p_false = 0.0
+        Def_p_true = 1.0
+        Def_p_na = 0.0
+    else:
+        Def_p_false = 0.0
+        Def_p_true = 0.0
+        Def_p_na = 1.0
+    
+    # feature Account ages
+    created_at = json_data['created_at']
+    Account_age = survival_time(created_at)
 
-	if json_data['default_profile_image'] == 'FALSE':
-		Default_profile_image = 0
-	else:
-		Default_profile_image = 1
+    # feature User name and screen_name
+    User_name = json_data['name']
+    Screen_name = json_data['screen_name']
+    User_name_digit, User_name_char = counter(User_name)
+    Screen_name_digit, Screen_name_char = counter(Screen_name)
 
-	if json_data['default_profile'] == 'FALSE':
-		Default_profile = 0
-	else:
-		Default_profile = 1
+    # feature Length of description and Description text
+    description_pre = json_data['description']
+    Description_length = len(description_pre)
+    
+    # feature Average tweet per day
+    Average_tweets_per_day = Total_status_count / float(Account_age)
 
-	created_at = json_data['created_at']
-	Account_age = survival_time(created_at)
+    feature = pd.DataFrame(index=[0])
+    feature['favorite_count'] = Count_of_favorite_tweets
+    feature['friends_to_followers'] = Friends_to_follower_ratio
+    feature['statuses_count'] = Total_status_count
+    feature['def_p_img_na'] = Def_p_img_na
+    feature['def_p_img_false'] = Def_p_img_false
+    feature['def_p_img_true'] = Def_p_img_true
+    feature['def_p_na'] = Def_p_na
+    feature['def_p_false'] = Def_p_false
+    feature['def_p_true'] = Def_p_true
+    feature['age'] = Account_age
+    feature['name_letter'] = User_name_char
+    feature['name_num'] = User_name_digit
+    feature['screen_letter'] = Screen_name_char
+    feature['screen_num'] = Screen_name_digit
+    feature['des_len'] = Description_length
+    # feature['avg_tweet_per_day'] = Average_tweets_per_day
+#     feature['des_text'] = Description_tfidf
 
-	User_name = json_data['name']
-	Screen_name = json_data['screen_name']
-
-	User_name_digit, User_name_char = counter(User_name)
-	Screen_name_digit, Screen_name_char = counter(Screen_name)
-
-	description_pre = json_data['description']
-	Description_length, Description_tfidf = preprocess_description(description_pre)
-
-	Average_tweets_per_day = Total_status_count / float(Account_age)
-
-	feature = list()
-	feature.append(Count_of_favorite_tweets)
-	feature.append(Friends_to_follower_ratio)
-	feature.append(Total_status_count)
-	feature.append(Default_profile_image)
-	feature.append(Default_profile)
-	feature.append(Account_age)
-	feature.append(User_name_digit)
-	feature.append(User_name_char)
-	feature.append(Screen_name_digit)
-	feature.append(Screen_name_char)
-	feature.append(Description_length)
-	feature.append(Description_tfidf)
-	feature.append(Average_tweets_per_day)
-
-	return feature
+    return feature
 
 
 
@@ -118,24 +150,41 @@ def counter(name):
 	return numbers, words
 
 
-def preprocess_description(description):
-	description_length = len(description)
-	des_list = list()
-	des_list.append(description)
-	count_vect = CountVectorizer()
-	X_train_counts = count_vect.fit_transform(des_list)
-	# X_train_counts.shape
-	# tf_transformer = TfidfTransformer(use_idf=False).fit(X_train_counts)
-	# X_train_tf = tf_transformer.transform(X_train_counts)
-	# X_train_tf.shape
-	tfidf_transformer = TfidfTransformer()
-	des_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-	
-	return description_length, des_train_tfidf
+def preprocess_description(user_id=None, screen_name=None):
+    # preprocess the description text
+    json = api.GetUser(user_id=user_id, screen_name=screen_name, include_entities=True, return_json=False)
+    json_data = json._json
+    description = json_data["description"]
+    
+    des_list = list()
+    des_list.append(description)
+    
+    tfidf_transformer = TfidfVectorizer()
+    des_text = tfidf_transformer.fit_transform(des_list)
+    
+    return des_text
 
 def measure_running_time(user_id=None, screen_name=None):
 	start = time.clock()
 	get_user(user_id=user_id, screen_name=screen_name)
 	end = time.clock()
 	print('function took %0.5f ms' % ((end-start)*1000.0))
+
+def get_predict(screen_name):
+	# random forest + knn
+	with open("/Users/letheyue/Documents/learn/Python/temp/TESLA-twitter-suspension-learning/test/classifier/ensemble_user.pkl", "rb") as file_handler:
+		loaded_pickle = joblib.load(file_handler)
+
+	feature = get_user(screen_name=screen_name)
+
+	np_feature = np.asarray((feature))
+
+	pred = loaded_pickle.predict(np_feature.tolist())
+
+	data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
+	basic_info = data._json
+	basic_info["prediction_label"] = float(pred[0])
+
+	return json.dumps(basic_info)
+
 

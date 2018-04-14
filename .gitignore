@@ -124,5 +124,6 @@ ENV/
 *.csv
 
 # ignore the classifier
-src/predictions/classifier/
+src/predictions/classifier/*
+!src/predictions/classifier/ensemble_user.pkl
 test/classifier/

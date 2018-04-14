@@ -7,22 +7,16 @@
 
 {% block content %}
     <div class="block social-block social-twitter">
-        {% load twitter_tags %}
-        <ul>
-            {% for tweet in tweets %}
-            <li>
-                <div class="tweet-meta">
-                    <a href="https://www.twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_blank">
-                        <img src="{{ tweet.user.profile_image_url }}" width="32" height="32" />
-                        <h2>{{ tweet.user.name }}<br /><span>@{{ tweet.user.screen_name }} &middot; {{ tweet.created_at|twitter_date }}</span></h2>
-                    </a>
-                </div>
-                <p>{{ tweet|expand_tweet_urls|urlize_tweet_text }}</p>
-            </li>
-            {% endfor %}
-
-        </ul>
-        <a href="#" class="btn btn-round btn-red"></a>
+        <div> 
+            <h2>The basic infomartion of the user you've searched: </h2>
+            <p> User ID: {{basic_info.id}} </p>
+            <p> User name: {{basic_info.name}} </p>
+            <p> User screen name: {{basic_info.screen_name}} </p>
+            <p> User description: {{basic_info.description}} </p>
+        </div>
+        <div>
+            <p> According to our model, this user is a {% if basic_info.prediction_label == 0.0 %} <b>Genuine  </b>{% else %} <b>Spam </b>{% endif %} User</p>
+        </div>
     </div>
 
 {% endblock%}
