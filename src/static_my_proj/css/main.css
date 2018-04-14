@@ -1,3 +1,7 @@
 body {
 	color: #ccc;
 }
+
+.name {
+  margin-left: 20px;
+}
