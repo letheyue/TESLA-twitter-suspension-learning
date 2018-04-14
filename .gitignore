@@ -127,3 +127,6 @@ ENV/
 src/predictions/classifier/*
 !src/predictions/classifier/ensemble_user.pkl
 test/classifier/
+
+# ignore twitter access token
+predictions/ignore.py

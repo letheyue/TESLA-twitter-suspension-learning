@@ -7,6 +7,9 @@ import numpy as np
 import pickle
 from sklearn.externals import joblib
 import json
+import os
+
+script_dir = os.path.dirname(__file__)
 
 from .ignore import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET
 
@@ -172,7 +175,7 @@ def measure_running_time(user_id=None, screen_name=None):
 
 def get_predict(screen_name):
 	# random forest + knn
-	with open("/Users/letheyue/Documents/learn/Python/temp/TESLA-twitter-suspension-learning/test/classifier/ensemble_user.pkl", "rb") as file_handler:
+	with open("predictions/classifier/ensemble_user.pkl", "rb") as file_handler:
 		loaded_pickle = joblib.load(file_handler)
 
 	feature = get_user(screen_name=screen_name)
