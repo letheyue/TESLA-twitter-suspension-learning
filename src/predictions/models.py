@@ -33,7 +33,10 @@ def get_user(user_id=None, screen_name=None):
     # feature Count of favorite tweets
     Count_of_favorite_tweets = int(json_data['favourites_count'])
     # feature Friends to follower ratio
-    Friends_to_follower_ratio = float(round(float(json_data['friends_count']) / json_data['followers_count'],6))
+    if json_data['followers_count'] == 0:
+        Friends_to_follower_ratio = float(100000)
+    else:
+        Friends_to_follower_ratio = (float(json_data['friends_count']) / json_data['followers_count'])
     # feature Total status count
     Total_status_count = int(json_data['statuses_count'])
     
@@ -98,7 +101,7 @@ def get_user(user_id=None, screen_name=None):
     feature['screen_letter'] = Screen_name_char
     feature['screen_num'] = Screen_name_digit
     feature['des_len'] = Description_length
-    # feature['avg_tweet_per_day'] = Average_tweets_per_day
+#     feature['avg_tweet_per_day'] = Average_tweets_per_day
 #     feature['des_text'] = Description_tfidf
 
     return feature
