@@ -20,7 +20,10 @@
         <p>{{ content }}</p>
     </div>
 </div>
-
+<div class="search-bar">
+    <p>Input the user you want to search below:</p>
+    {% include 'predictions/search-form.html' %}
+</div>
 {% endblock%}
 
 
@@ -51,6 +54,10 @@
     	</div>
     </div>
 
+    <div class="search-bar">
+        {% include 'predictions/search-form.html' %}
+    </div>
+    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

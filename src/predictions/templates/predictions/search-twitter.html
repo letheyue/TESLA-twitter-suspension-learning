@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="block social-block social-twitter">
-        <div> 
+        <div class="info"> 
             <h2>The basic infomartion of the user you've searched: </h2>
             <p> User ID: {{basic_info.id}} </p>
             <p> User name: {{basic_info.name}} </p>
@@ -18,5 +18,8 @@
             <p> According to our model, this user is a {% if basic_info.prediction_label == 0.0 %} <b>Genuine  </b>{% else %} <b>Spam </b>{% endif %} User</p>
         </div>
     </div>
-
+    <div class="search-bar">
+        <p>Continue to search:</p>
+        {% include 'predictions/search-form.html' %}
+    </div>
 {% endblock%}
