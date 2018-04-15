@@ -9,3 +9,17 @@ body {
 .row {
 	float: left;
 }
+
+.info {
+	border: 2px, solid, rgb(10, 36, 83);
+}
+
+.search-bar {
+	width: 300px;
+	height: 200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -150px;
+	margin-top: -100px;
+}

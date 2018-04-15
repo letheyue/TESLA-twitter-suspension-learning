@@ -17,3 +17,10 @@ def about_page(request):
 		"content": "Welcome to the about page"
 	}
 	return render(request, "home_page.html", context)
+
+def help_page(request):
+	context = {
+		"title": "Help Page",
+		"content": "Welcome to the help page"
+	}
+	return render(request, "home_page.html", context)
