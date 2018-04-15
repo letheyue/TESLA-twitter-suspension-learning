@@ -20,12 +20,8 @@
 	      <li class="nav-item {% if request.path == about_url %} active {% endif %}">
 	        <a class="nav-link" href="{{ about_url }}">About</a>
 	      </li>
-	      <li class="nav-item {% if request.path == search_url %} active {% endif %}">
-	        <a class="nav-link" href="#">Search</a>
-	      </li>
 
 	    </ul>
-	    {% include 'predictions/search-form.html' %}
 	  </div>
 	</div>
 </nav>

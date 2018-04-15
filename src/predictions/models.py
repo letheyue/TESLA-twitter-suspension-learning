@@ -9,6 +9,19 @@ from sklearn.externals import joblib
 import json
 import os
 
+import re
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+from nltk.tokenize import WordPunctTokenizer
+from keras.models import load_model
+from keras import backend as be
+from django.http import Http404
+tok = WordPunctTokenizer()
+
+pat1 = r'@[A-Za-z0-9_]+'
+pat2 = r"(?P<url>https?://[^\s]+)"
+combined_pat = r'|'.join((pat1, pat2))
+
 script_dir = os.path.dirname(__file__)
 
 from .ignore import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET
@@ -18,6 +31,7 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
                      access_token_key=ACCESS_TOKEN_KEY,
                      access_token_secret=ACCESS_TOKEN_SECRET)
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def get_tweets(screen_name):
     """
@@ -176,21 +190,98 @@ def measure_running_time(user_id=None, screen_name=None):
 	end = time.clock()
 	print('function took %0.5f ms' % ((end-start)*1000.0))
 
+# crawl at the text and do pre-process, then change them into vector feature
+def get_text(screen_name):
+    timeline = api.GetUserTimeline(screen_name=screen_name)
+    # check if it has timeline
+    if len(timeline) is 0:
+        raise Http404("This user doesn't have any tweets!")
+    # get the first 1 tweets
+    index = 0
+    list_text = list()
+    for item in timeline:
+        index += 1
+        data = item._json
+        list_text.append(data['text'])
+        break
+
+    text = tweet_cleaner_updated(list_text[0])
+
+    with open('predictions/classifier/pos_hmean.p', 'rb') as fp:
+        w2v_pos_hmean_01 = pickle.load(fp, encoding='latin1')
+
+    text = get_w2v_general(text, 200, w2v_pos_hmean_01)
+
+    return text
+
+# make the str text to vector feature
+def get_w2v_general(tweet, size, vectors):
+    vec = np.zeros(size).reshape((1, size))
+    count = 0.
+    for word in tweet.split():
+        try:
+            vec += vectors[word].reshape((1, size))
+            count += 1.
+        except KeyError:
+            continue
+    if count != 0:
+        vec /= count
+    return vec
+
+# pre-processing the text
+def tweet_cleaner_updated(text):
+    try:
+        mention = re.search(pat1, text).group()
+    except:
+        mention = ''
+    try:
+        url = re.search(pat2, text).group("url")
+        o = urlparse(url)
+        netloc = o.netloc
+        path = p.path
+    except:
+        netloc = ''
+        path = ''
+    soup = BeautifulSoup(text, 'html.parser')
+    souped = soup.get_text()
+    try:
+        bom_removed = souped.decode("utf-8-sig").replace(u"\u2026", "?")
+    except:
+        bom_removed = souped
+    stripped = re.sub(combined_pat, '', bom_removed)
+    lower_case = stripped.lower()
+    letters_only = re.sub("[^a-zA-Z]", " ", lower_case)
+    letters_only = letters_only + netloc + path + mention
+    # During the letters_only process two lines above, it has created unnecessay white spaces,
+    # I will tokenize and join together to remove unneccessary white spaces
+    words = [x for x  in tok.tokenize(letters_only) if len(x) > 1]
+    return (" ".join(words)).strip()
+
 def get_predict(screen_name):
-	# random forest + knn
-	with open("predictions/classifier/ensemble_user.pkl", "rb") as file_handler:
-		loaded_pickle = joblib.load(file_handler)
+    # random forest + knn
+    with open("predictions/classifier/ensemble_user.pkl", "rb") as file_handler:
+        loaded_pickle = joblib.load(file_handler)
 
-	feature = get_user(screen_name=screen_name)
+    feature = get_user(screen_name=screen_name)
 
-	np_feature = np.asarray((feature))
+    np_feature = np.asarray((feature))
 
-	pred = loaded_pickle.predict(np_feature.tolist())
+    pred_account = loaded_pickle.predict(np_feature.tolist())
 
-	data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
-	basic_info = data._json
-	basic_info["prediction_label"] = float(pred[0])
+    data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
 
-	return json.dumps(basic_info)
+
+    # word2vec for text
+    
+    text_feature = get_text(screen_name)
+    loaded_w2v_model = load_model('predictions/classifier/w2v_01_best_weights.10-0.9346.hdf5')
+    pred_text = loaded_w2v_model.predict(text_feature) # label is pred_text[0][0]
+    be.clear_session()
+
+    basic_info = data._json
+    basic_info["prediction_account_label"] = float(pred_account[0] * 100)
+    basic_info["prediction_text_label"] = float(pred_text[0][0] * 100)
+
+    return json.dumps(basic_info)
 
 

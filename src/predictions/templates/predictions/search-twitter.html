@@ -15,7 +15,9 @@
             <p> User description: {{basic_info.description}} </p>
         </div>
         <div>
-            <p> According to our model, this user is a {% if basic_info.prediction_label == 0.0 %} <b>Genuine  </b>{% else %} <b>Spam </b>{% endif %} User</p>
+            <p> Based on our model, this user is ??? </p>
+            <p> Account features <b>{{basic_info.prediction_account_label}}%</b> spam</p>
+            <p> Tweet features <b>{{basic_info.prediction_text_label}}%</b> spam</p>
         </div>
     </div>
 
