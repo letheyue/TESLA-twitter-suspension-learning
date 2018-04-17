@@ -259,7 +259,7 @@ def tweet_cleaner_updated(text):
 
 def get_predict(screen_name):
     # random forest + knn
-    with open("predictions/classifier/ensemble_user.pkl", "rb") as file_handler:
+    with open("predictions/classifier/ensemble_user_2.pkl", "rb") as file_handler:
         loaded_pickle = joblib.load(file_handler)
 
     feature = get_user(screen_name=screen_name)
