@@ -19,13 +19,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 
-from .views import home_page, about_page, help_page
+from .views import home_page, about_page
 from predictions.views import SearchTwitterView
 
 urlpatterns = [
 	url(r'^$', home_page, name='home'),
 	url(r'^about/$', about_page, name='about'),
-    url(r'^help/$', help_page, name='help'),
     url(r'^prediction/', include(("predictions.urls"), namespace='prediction')),
 
     url(r'^admin/', admin.site.urls),
