@@ -13,7 +13,7 @@ def home_page(request):
 
 def about_page(request):
 	context = {
-		"title": "About Page",
+		"title": "About TESLA",
 		"content": "Welcome to the about page"
 	}
-	return render(request, "home_page.html", context)
+	return render(request, "about_page.html", context)
