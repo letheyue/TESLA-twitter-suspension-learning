@@ -278,7 +278,7 @@ def get_predict(screen_name):
 
     np_feature = np.asarray((feature))
 
-    pred_account = loaded_pickle.predict(np_feature.tolist())
+    pred_account = loaded_pickle.predict_proba(np_feature.tolist())
 
     data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
 
@@ -291,7 +291,7 @@ def get_predict(screen_name):
     be.clear_session()
 
     basic_info = data._json
-    basic_info["prediction_account_label"] = float(pred_account[0] * 100)
+    basic_info["prediction_account_label"] = float(pred_account[0][1] * 100)
     basic_info["prediction_text_label"] = float(pred_text[0][0] * 100)
 
     return json.dumps(basic_info)

@@ -115,3 +115,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# ignore model
+predictions/classifier
+!predictions/classifier/rf_user_2.pkl

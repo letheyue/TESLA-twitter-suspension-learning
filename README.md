@@ -1,4 +1,6 @@
-Update 04/13/2018
+Update 04/18/2018
+
+### The model is in the google drive, the folder named Gitignore stuffs, please add the model into path: src/predictions/classifier/
 
 The github url: https://github.com/letheyue/TESLA-twitter-suspension-learning
 
