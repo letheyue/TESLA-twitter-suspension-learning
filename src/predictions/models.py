@@ -99,6 +99,14 @@ def get_user(user_id=None, screen_name=None):
     # feature Average tweet per day
     # Average_tweets_per_day = Total_status_count / float(Account_age)
 
+    # feature listed count
+    Listed_count = json_data['listed_count']
+
+    # feature of description, the number of hashtag, @ and url
+    Bio_hashtag = json_data['description'].count('#')
+    Bio_at = json_data['description'].count('@')
+    Bio_url = json_data['description'].count('http')
+
     feature = pd.DataFrame(index=[0])
     feature['favorite_count'] = Count_of_favorite_tweets
     feature['friends_to_followers'] = Friends_to_follower_ratio
@@ -117,6 +125,10 @@ def get_user(user_id=None, screen_name=None):
     feature['des_len'] = Description_length
 #     feature['avg_tweet_per_day'] = Average_tweets_per_day
 #     feature['des_text'] = Description_tfidf
+    feature['listed_count'] = Listed_count
+    feature['bio_hashtag'] = Bio_hashtag
+    feature['bio_at'] = Bio_at
+    feature['bio_url'] = Bio_url
 
     return feature
 
@@ -259,7 +271,7 @@ def tweet_cleaner_updated(text):
 
 def get_predict(screen_name):
     # random forest + knn
-    with open("predictions/classifier/ensemble_user_2.pkl", "rb") as file_handler:
+    with open("predictions/classifier/rf_user_2.pkl", "rb") as file_handler:
         loaded_pickle = joblib.load(file_handler)
 
     feature = get_user(screen_name=screen_name)
