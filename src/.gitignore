@@ -119,3 +119,5 @@ ENV/
 # ignore model
 predictions/classifier/*
 !predictions/classifier/rf_user_3.pkl
+
+templates/team_page.html

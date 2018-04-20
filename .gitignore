@@ -132,3 +132,6 @@ src/predictions/ignore.py
 
 # ignore aws access token
 src/Tesla/aws
+
+# ignore team info
+src/templates/team_page.html
