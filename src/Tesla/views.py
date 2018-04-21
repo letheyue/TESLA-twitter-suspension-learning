@@ -19,4 +19,4 @@ def about_page(request):
 	return render(request, "about_page.html", context)
 
 def team_page(request):
-	return render(request, "team_page.html")
+	return render(request, "team_pagen.html")

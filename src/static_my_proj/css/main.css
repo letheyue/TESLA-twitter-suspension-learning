@@ -2,10 +2,69 @@ body {
 	color: rgb(0, 0, 0);
 }
 
+/**
+ * ====================================
+ * Navbar Style
+ * ====================================
+ */
 .name {
   margin-left: 20px;
 }
 
-.info {
-	border: 2px, solid, rgb(10, 36, 83);
+/**
+ * ====================================
+ * Content Style -- Links
+ * ====================================
+ */
+
+ .links {
+  position: fixed; 
+  top:20%; 
+  right:2%;
+ }
+
+
+/**
+ * ====================================
+ * Footer Style
+ * ====================================
+ */
+
+ .footer {
+  width: 100%;
+  height:100px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: rgb(74, 14, 125);
+  color: rgb(254, 254, 254);
+}
+
+.section-separator {
+  display: block;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.title-divider::before {
+  background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),#b1b1b1);
+  margin-right: 4px;
+}
+
+.title-divider::after {
+  background-image: -webkit-linear-gradient(right,rgba(255,255,255,0),#b1b1b1);
+  margin-left: 4px;
+}
+
+.title-divider:after, .title-divider:before {
+  content: "";
+  display: inline-block;
+  width: 18%;
+  height: 1px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.copyright {
+  margin-top: -10px;
 }
