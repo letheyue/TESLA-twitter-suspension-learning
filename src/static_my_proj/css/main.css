@@ -9,3 +9,7 @@ body {
 .info {
 	border: 2px, solid, rgb(10, 36, 83);
 }
+
+#div{
+    text-align: 240px;
+}
