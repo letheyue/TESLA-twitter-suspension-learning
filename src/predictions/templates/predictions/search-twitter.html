@@ -8,14 +8,15 @@
 {% block content %}
 <div>
     <div class="col-md-12">
-        <div class="info"> 
-            <h2>The basic infomartion of the user you've searched: </h2>
-            <p> User ID: {{basic_info.id}} </p>
-            <p> User name: {{basic_info.name}} </p>
-            <p> User screen name: {{basic_info.screen_name}} </p>
-            <p> User description: {{basic_info.description}} </p>
-        </div>
-        <div>
+		<h2>The basic infomartion of the user you've searched: </h2><br>
+		<img align="left" src={{basic_info.pp}} style = "width:240px;height:240px"} hspace="20">
+		<div>
+			<h3> {{basic_info.name}} </h3>
+            <a href={{basic_info.pl}} target="_blank"> @{{basic_info.screen_name}} </a>
+            <p> {{basic_info.description}} </p>
+		</div>
+		<br><br><br><br><br><br>
+		<div>
             <p> Based on our model, this user is ??? </p>
             <p> Account features <b>{{basic_info.prediction_account_label}}%</b> spam</p>
             <p> Tweet features <b>{{basic_info.prediction_text_label}}%</b> spam</p>
