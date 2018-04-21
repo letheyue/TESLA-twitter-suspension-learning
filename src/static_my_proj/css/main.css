@@ -2,9 +2,26 @@ body {
 	color: rgb(0, 0, 0);
 }
 
+/**
+ * ====================================
+ * Navbar Style
+ * ====================================
+ */
 .name {
   margin-left: 20px;
 }
+
+/**
+ * ====================================
+ * Content Style -- Links
+ * ====================================
+ */
+
+ .links {
+  position: fixed; 
+  top:20%; 
+  right:2%;
+ }
 
 
 /**
@@ -24,9 +41,9 @@ body {
 }
 
 .section-separator {
-display: block;
-padding-top: 30px;
-padding-bottom: 30px;
+  display: block;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .title-divider::before {
