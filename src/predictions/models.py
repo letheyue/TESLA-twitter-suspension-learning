@@ -13,9 +13,13 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from nltk.tokenize import WordPunctTokenizer
-from keras.models import load_model
-from keras import backend as be
+# from keras.models import load_model
+# from keras import backend as be
 from django.http import Http404
+# import boto3
+# from Tesla.aws.conf import AWS_STORAGE_BUCKET_NAME
+# from Tesla.aws.ignore import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
 tok = WordPunctTokenizer()
 
 pat1 = r'@[A-Za-z0-9_]+'
@@ -271,8 +275,13 @@ def tweet_cleaner_updated(text):
 
 def get_predict(screen_name):
     # random forest + knn
-    with open("predictions/classifier/rf_user_2.pkl", "rb") as file_handler:
+    with open("predictions/classifier/rf_user_3.pkl", "rb") as file_handler:
         loaded_pickle = joblib.load(file_handler)
+    # s3 = boto3.resource('s3',aws_access_key_id=AWS_ACCESS_KEY_ID,aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+    # local_file = 'predictions/tmp/rf_user_2.pkl'
+    # obj = s3.Bucket(AWS_STORAGE_BUCKET_NAME).download_file('media/rf_user_2.pkl', local_file)
+    # loaded_pickle = joblib.load(local_file)
+    # os.remove(local_file)
 
     feature = get_user(screen_name=screen_name)
 
@@ -285,14 +294,19 @@ def get_predict(screen_name):
 
     # word2vec for text
     
-    text_feature = get_text(screen_name)
-    loaded_w2v_model = load_model('predictions/classifier/w2v_01_best_weights.10-0.9346.hdf5')
-    pred_text = loaded_w2v_model.predict(text_feature) # label is pred_text[0][0]
-    be.clear_session()
+    # text_feature = get_text(screen_name)
+    # loaded_w2v_model = load_model('predictions/classifier/w2v_01_best_weights.10-0.9346.hdf5')
+    # pred_text = loaded_w2v_model.predict(text_feature) # label is pred_text[0][0]
+    # be.clear_session()
 
     basic_info = data._json
     basic_info["prediction_account_label"] = float(pred_account[0][1] * 100)
-    basic_info["prediction_text_label"] = float(pred_text[0][0] * 100)
+    basic_info["pl"] = "https://twitter.com/"+basic_info["screen_name"]
+    if basic_info['default_profile_image']:
+	    basic_info["pp"] = "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+    elif 'normal' in basic_info["profile_image_url"]:
+        basic_info["pp"] = basic_info["profile_image_url"][:basic_info["profile_image_url"].find("_normal")]+basic_info["profile_image_url"][basic_info["profile_image_url"].find('_normal'):][basic_info["profile_image_url"][basic_info["profile_image_url"].find('_normal'):].find('.'):]
+    # basic_info["prediction_text_label"] = float(pred_text[0][0] * 100)
 
     return json.dumps(basic_info)
 

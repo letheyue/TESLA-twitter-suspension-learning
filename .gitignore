@@ -125,8 +125,14 @@ ENV/
 
 # ignore the classifier
 src/predictions/classifier/*
-!src/predictions/classifier/ensemble_user.pkl
 test/classifier/
 
 # ignore twitter access token
-predictions/ignore.py
+src/predictions/ignore.py
+
+# ignore aws access token
+src/Tesla/aws
+
+# ignore team info
+src/templates/team_page.html
+src/templates/team_pagen.html

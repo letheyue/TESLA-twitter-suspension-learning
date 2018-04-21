@@ -17,3 +17,6 @@ def about_page(request):
 		"content": "Welcome to the about page"
 	}
 	return render(request, "about_page.html", context)
+
+def team_page(request):
+	return render(request, "team_pagen.html")
