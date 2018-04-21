@@ -25,6 +25,7 @@
             </div>
           {% endif %}
           {% block content %}{% endblock %}
+          {% include 'base/footer.html' with brand_name='Tesla' %}
         </div>
  
         {% include 'base/js.html' %}
