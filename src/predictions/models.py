@@ -301,6 +301,7 @@ def get_predict(screen_name):
 
     basic_info = data._json
     basic_info["prediction_account_label"] = float(pred_account[0][1] * 100)
+    basic_info["pl"] = "https://twitter.com/"+basic_info["screen_name"]
     if basic_info['default_profile_image']:
 	    basic_info["pp"] = "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
     elif 'normal' in basic_info["profile_image_url"]:
