@@ -9,23 +9,34 @@ from sklearn.externals import joblib
 import json
 import os
 
-import re
 from urllib.parse import urlparse
 import requests
+from django.http import Http404
+
+import warnings 
+warnings.filterwarnings("ignore")
+
+import pickle
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+import re
 from bs4 import BeautifulSoup
 from nltk.tokenize import WordPunctTokenizer
-# from keras.models import load_model
-# from keras import backend as be
-from django.http import Http404
-# import boto3
-# from Tesla.aws.conf import AWS_STORAGE_BUCKET_NAME
-# from Tesla.aws.ignore import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-
+from keras.models import load_model
+from keras import backend as be
 tok = WordPunctTokenizer()
 
 pat1 = r'@[A-Za-z0-9_]+'
-pat2 = r"(?P<url>https?://[^\s]+)"
+pat2 = r'https?://[^ ]+'
 combined_pat = r'|'.join((pat1, pat2))
+www_pat = r'www.[^ ]+'
+negations_dic = {"isn't":"is not", "aren't":"are not", "wasn't":"was not", "weren't":"were not",
+                "haven't":"have not","hasn't":"has not","hadn't":"had not","won't":"will not",
+                "wouldn't":"would not", "don't":"do not", "doesn't":"does not","didn't":"did not",
+                "can't":"can not","couldn't":"could not","shouldn't":"should not","mightn't":"might not",
+                "mustn't":"must not"}
+neg_pattern = re.compile(r'\b(' + '|'.join(negations_dic.keys()) + r')\b')
+
 
 script_dir = os.path.dirname(__file__)
 
@@ -210,26 +221,26 @@ def measure_running_time(user_id=None, screen_name=None):
 # crawl at the text and do pre-process, then change them into vector feature
 def get_text(screen_name):
     timeline = api.GetUserTimeline(screen_name=screen_name)
-    # check if it has timeline
-    if len(timeline) is 0:
-        raise Http404("This user doesn't have any tweets!")
-    # get the first 1 tweets
-    index = 0
+
+    # get the first 5 text
     list_text = list()
+    index = 0
     for item in timeline:
         index += 1
         data = item._json
-        list_text.append(data['text'])
-        break
+        clean_data = tweet_cleaner_updated(data['text'])
+        list_text.append(clean_data)
+        if index == 5:
+            break
+            
+    # pre-processing the data
+    with open('predictions/classifier/tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+        
+    sequences_test = tokenizer.texts_to_sequences(list_text)
+    test_text = pad_sequences(sequences_test, maxlen=45)
 
-    text = tweet_cleaner_updated(list_text[0])
-
-    with open('predictions/classifier/pos_hmean.p', 'rb') as fp:
-        w2v_pos_hmean_01 = pickle.load(fp, encoding='latin1')
-
-    text = get_w2v_general(text, 200, w2v_pos_hmean_01)
-
-    return text
+    return test_text
 
 # make the str text to vector feature
 def get_w2v_general(tweet, size, vectors):
@@ -247,28 +258,17 @@ def get_w2v_general(tweet, size, vectors):
 
 # pre-processing the text
 def tweet_cleaner_updated(text):
-    try:
-        mention = re.search(pat1, text).group()
-    except:
-        mention = ''
-    try:
-        url = re.search(pat2, text).group("url")
-        o = urlparse(url)
-        netloc = o.netloc
-        path = p.path
-    except:
-        netloc = ''
-        path = ''
     soup = BeautifulSoup(text, 'html.parser')
     souped = soup.get_text()
     try:
-        bom_removed = souped.decode("utf-8-sig").replace(u"\u2026", "?")
+        bom_removed = souped.decode("utf-8-sig").replace(u"\ufffd", "?")
     except:
         bom_removed = souped
     stripped = re.sub(combined_pat, '', bom_removed)
+    stripped = re.sub(www_pat, '', stripped)
     lower_case = stripped.lower()
-    letters_only = re.sub("[^a-zA-Z]", " ", lower_case)
-    letters_only = letters_only + netloc + path + mention
+    neg_handled = neg_pattern.sub(lambda x: negations_dic[x.group()], lower_case)
+    letters_only = re.sub("[^a-zA-Z]", " ", neg_handled)
     # During the letters_only process two lines above, it has created unnecessay white spaces,
     # I will tokenize and join together to remove unneccessary white spaces
     words = [x for x  in tok.tokenize(letters_only) if len(x) > 1]
@@ -291,11 +291,6 @@ def get_predict(screen_name):
     # random forest + knn
     with open("predictions/classifier/rf_user_3.pkl", "rb") as file_handler:
         loaded_pickle = joblib.load(file_handler)
-    # s3 = boto3.resource('s3',aws_access_key_id=AWS_ACCESS_KEY_ID,aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
-    # local_file = 'predictions/tmp/rf_user_2.pkl'
-    # obj = s3.Bucket(AWS_STORAGE_BUCKET_NAME).download_file('media/rf_user_2.pkl', local_file)
-    # loaded_pickle = joblib.load(local_file)
-    # os.remove(local_file)
 
     feature = get_user(screen_name=screen_name)
 
@@ -306,12 +301,15 @@ def get_predict(screen_name):
     data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
 
 
-    # word2vec for text
+    # CNN for text
+    test_text = get_text(screen_name)
+
+    # load the function
+    loaded_CNN_model = load_model('predictions/classifier/CNN_best_weights.02-0.8820.hdf5')
     
-    # text_feature = get_text(screen_name)
-    # loaded_w2v_model = load_model('predictions/classifier/w2v_01_best_weights.10-0.9346.hdf5')
-    # pred_text = loaded_w2v_model.predict(text_feature) # label is pred_text[0][0]
-    # be.clear_session()
+    # get the prediction value
+    pred_text = loaded_CNN_model.predict(test_text)
+    be.clear_session()
 
     basic_info = data._json
     basic_info['url'] = extend_url(basic_info['url'])
@@ -323,7 +321,13 @@ def get_predict(screen_name):
 	    basic_info["pp"] = "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
     elif 'normal' in basic_info["profile_image_url"]:
         basic_info["pp"] = basic_info["profile_image_url"][:basic_info["profile_image_url"].find("_normal")]+basic_info["profile_image_url"][basic_info["profile_image_url"].find('_normal'):][basic_info["profile_image_url"][basic_info["profile_image_url"].find('_normal'):].find('.'):]
-    # basic_info["prediction_text_label"] = float(pred_text[0][0] * 100)
+    
+    # put the prediction of text label into json and get the mean
+    basic_info['prediction_text_label'] = list()
+    for i in range (0, len(pred_text)):
+        basic_info['prediction_text_label'].append(float("{0:.4f}".format(pred_text[i][0])) * 100)
+    basic_info['prediction_text_mean'] = sum(basic_info['prediction_text_label']) / float(len(basic_info['prediction_text_label']))
+    basic_info['prediction_total'] = (basic_info["prediction_account_label"] + basic_info['prediction_text_mean']) / 2
 
     return json.dumps(basic_info)
 

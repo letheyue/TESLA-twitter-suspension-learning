@@ -1,21 +1,85 @@
 body {
 	color: rgb(0, 0, 0);
+  padding-bottom:100px;
 }
 
+ul {
+	list-style-type: none;
+}
+
+a {
+	color: #b63b4d;
+	text-decoration: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1600px;
+  min-height: 100%;
+}
+
+/**
+ * ====================================
+ * Navbar Style
+ * ====================================
+ */
 .name {
   margin-left: 20px;
 }
 
-.info {
-	border: 2px, solid, rgb(10, 36, 83);
+/**
+ * ====================================
+ * Content Style -- Links
+ * ====================================
+ */
+
+ .top-button {
+  position: fixed; 
+  top: 80%; 
+  right:2%;
+ }
+
+/**
+ * ====================================
+ * Footer Style
+ * ====================================
+ */
+
+ .footer {
+  width: 100%;
+  height:100px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: rgb(29, 161, 242);
+  color: rgb(254, 254, 254);
 }
 
-.search-bar {
-	width: 300px;
-	height: 200px;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -150px;
-	margin-top: -100px;
+.section-separator {
+  display: block;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.title-divider::before {
+  background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),#b1b1b1);
+  margin-right: 4px;
+}
+
+.title-divider::after {
+  background-image: -webkit-linear-gradient(right,rgba(255,255,255,0),#b1b1b1);
+  margin-left: 4px;
+}
+
+.title-divider:after, .title-divider:before {
+  content: "";
+  display: inline-block;
+  width: 18%;
+  height: 1px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.copyright {
+  margin-top: -10px;
 }
