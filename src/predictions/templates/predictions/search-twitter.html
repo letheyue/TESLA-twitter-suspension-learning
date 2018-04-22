@@ -20,7 +20,7 @@
 		</div>
 		<br style="clear:left;"><br>
 		<div>
-            <p> Based on our model, this user is <b>{{basic_info.prediction_total}}%</b> spam（{% if basic_info.prediction_total < 50 %} <b>Genuine  </b>{% else %} <b>Spam </b>{% endif %} User ）</p>
+            <p> Based on our model, this user is <b>{{basic_info.prediction_total}}%</b> spam {% if basic_info.prediction_total < 50 %} (<b>Genuine</b>){% else %} (<b>Spam</b>){% endif %}</p>
             <p> Account features: <b>{{basic_info.prediction_account_label}}%</b> spam</p>
             <p> Tweet features: 
                 {% for obj in basic_info.prediction_text_label %}
