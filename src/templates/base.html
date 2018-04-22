@@ -11,7 +11,7 @@
     {% block base_head %} {% endblock %}
   </head>
   <body>
-        {% include 'base/navbar.html' with brand_name='Tesla' %}
+        {% include 'base/navbar.html' with brand_name='TESLA' %}
         
         <div class='container'>
           {% if messages %}
@@ -25,7 +25,8 @@
             </div>
           {% endif %}
           {% block content %}{% endblock %}
-          {% include 'base/footer.html' with brand_name='Tesla' %}
+		  
+          {% include 'base/footer.html' with brand_name='TESLA' %}
         </div>
  
         {% include 'base/js.html' %}
