@@ -11,6 +11,7 @@ import os
 
 import re
 from urllib.parse import urlparse
+import requests
 from bs4 import BeautifulSoup
 from nltk.tokenize import WordPunctTokenizer
 # from keras.models import load_model
@@ -273,6 +274,19 @@ def tweet_cleaner_updated(text):
     words = [x for x  in tok.tokenize(letters_only) if len(x) > 1]
     return (" ".join(words)).strip()
 
+def extend_url(url):
+    if url is None:
+        return None
+    return requests.get(url).url
+
+def short_num(num):
+    if (num/1000000 > 1):
+        return str(int(num/1000000)) + ' M'
+    elif (num / 1000 > 1):
+        return str(int(num/1000)) + ' K'
+    else:
+        return str(num)
+
 def get_predict(screen_name):
     # random forest + knn
     with open("predictions/classifier/rf_user_3.pkl", "rb") as file_handler:
@@ -300,6 +314,9 @@ def get_predict(screen_name):
     # be.clear_session()
 
     basic_info = data._json
+    basic_info['url'] = extend_url(basic_info['url'])
+    basic_info['followers_count'] = short_num(basic_info['followers_count'])
+    basic_info['friends_count'] = short_num(basic_info['friends_count'])
     basic_info["prediction_account_label"] = float(pred_account[0][1] * 100)
     basic_info["pl"] = "https://twitter.com/"+basic_info["screen_name"]
     if basic_info['default_profile_image']:

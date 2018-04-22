@@ -14,6 +14,9 @@
 			<h3> {{basic_info.name}} </h3>
             <a href={{basic_info.pl}} target="_blank"> @{{basic_info.screen_name}} </a>
             <p> {{basic_info.description}} </p>
+            <p> {{basic_info.location}} </p>
+            <p>{% if basic_info.url%} <a href={{basic_info.url}}> {{basic_info.url}}{% endif %}</a></p>
+            <p> <b>{{basic_info.friends_count}}</b> Following &nbsp; &nbsp; &nbsp; <b>{{basic_info.followers_count}}</b> Followers</p>
 		</div>
 		<br style="clear:left;"><br>
 		<div>
