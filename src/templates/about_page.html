@@ -4,36 +4,127 @@
 <title>Home Page Template</title>
 
 {% block base_head %}
-     <link rel='stylesheet' href='{% static "css/main.css" %}'>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fuentes de Google -->
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Iconos -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='{% static "css/style.css" %}'>
 {% endblock %}
 
 {% block content %}
 
-<div class='text-center'>
-    <h1>{{ title }}</h1>
+<div class="menu">
+    <ul id="accordion" class="accordion">
+        <li>
+            <div class="link"><i class="fa fa-paint-brush"></i>Introduction</div>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-code"></i>Related Work<i class="fa fa-chevron-down"></i></div>
+            <ul class="submenu">
+                <li><a href="#">Data Visualization</a></li>
+                <li><a href="#">Training Models</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-globe"></i>Analysis</div>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-paint-brush"></i>Discussion<i class="fa fa-chevron-down"></i></div>
+            <ul class="submenu">
+                <li><a href="#">Challenges</a></li>
+                <li><a href="#">What We Learnt</a></li>
+                <li><a href="#">Dark Side</a></li>
+                <li><a href="#">What's Next</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-globe"></i>Links</div>
+        </li>
+    </ul>
 </div>
 
-<div class="intro">
-    <h3>Introduction</h3>
-    <p>TESLA(TwittEr Spam LeArning) is a course project of Texas A&M University CSCE 670 Information Storage and Retrieval.</p>
-</div>
-
-<div class="dark-side">
-    <h3>Dark Side</h3>
-</div>
-
-<div class="links">
-    <div class="btn-group ml-2">
-        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Links
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="https://github.com/letheyue/TESLA-twitter-suspension-learning">GitHub</a>
-            <a class="dropdown-item" href="https://drive.google.com/open?id=1yNUu5uFplskbshQB2ipT63JYBM0pcPH">Data</a>
-            <a class="dropdown-item" href="#">Video</a>
+<div class="about-content">
+    <div class='text-center'>
+        <h1>{{ title }}</h1>
+    </div>
+    
+    <div class="intro">
+        <h3>Introduction</h3>
+        <p>TESLA(TwittEr Spam LeArning) is a course project of Texas A&M University CSCE 670 Information Storage and Retrieval.</p>
+    </div>
+    <hr>
+    <div class="related-work">
+        <h3>Related Work</h3>
+        <h5>Data Visualization</h5>
+        <h5>Training Models</h5>
+    </div>
+    <hr>
+    <div class="analysis">
+        <h3>Analysis</h3>
+    </div>
+    <hr>
+    <div class="discussion">
+        <h3>Discussion</h3>
+        <h5>Challenges</h5>
+        <h5>What We Learnt</h5>
+        <p>In this project, we initially trained our model with data gathered during 2014 to 2016. However, when we used the model to classify current spam users, the accuracy was not satisfying. From this result, we found that Twitter spam users have been changing during the years. As time passes, their features can be a lot different. Therefore, spam topic drift is a challenge for our classifier.
+                We believe this problem is happening in many areas of IR, including search engines as well as recommenders which also involves data training processes to give better accuracy. To deal with this issue, it is apparent that one-time training is not enough. Instead, frequent training with newest data is necessary.
+                </p>
+        <h5>Dark Side</h5>
+        <h5>What's Next</h5>
+            <ul>
+                <li>
+                    <p class="thick">More targets:</p> We believe similar methods used in this project can be applied to classify other kinds of malicious users, such as those who may be suspended due to various reasons.
+                </li>
+                <li>
+                    <p class="thick">Better scalability:</p> The system can be used for other languages if text features of new languages are available. 
+                </li>
+                <li>
+                    <p class="thick">Form of the app:</p> Currently the app is in the form of a website. We think it would be more convenience for people to use if it is made as a web extension.
+                </li>
+            </ul>
+    </div>
+    <hr>
+    <div class="links">
+        <h3>Links</h3>
+        <p><i class="fa fa-github" aria-hidden="true"></i> Our GitHub repository: <a href="https://github.com/letheyue/TESLA-twitter-suspension-learning">GitHub</a></p>
+        <p><i class="fa fa-google" aria-hidden="true"></i> Data set we used: <a href="https://drive.google.com/open?id=1yNUu5uFplskbshQB2ipT63JYBM0pcPH">Data</a></p>
+        <p class="italic">Note: Due to the privacy regulations of Twitter, here we can only present the user ID in part of our data set. If you want to get access to our full data set, please contact us through the email: Rlin225@tamu.edu.</p>
+        <p><i class="fa fa-youtube" aria-hidden="true"></i> Demo video: <a href="#">Video</a></p>
+    </div>
+        
+    
+    <div class="top-button">
+        <div class="btn-group-vertical ml-2">
+            <button onclick="topFunction()" class="btn btn-primary btn-lg" type="button" id="goTop" title="Go to top">Back to Top</button>
         </div>
     </div>
 </div>
+
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+<script>
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+    
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("myBtn").style.display = "block";
+        } else {
+            document.getElementById("myBtn").style.display = "none";
+        }
+    }
+    
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
 
 {% endblock%}
 
