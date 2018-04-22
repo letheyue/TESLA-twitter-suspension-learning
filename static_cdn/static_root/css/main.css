@@ -1,6 +1,6 @@
 body {
 	color: rgb(0, 0, 0);
-  padding-bottom:100px;
+  padding-bottom: 200px;
 }
 
 ul {
@@ -27,17 +27,7 @@ a {
   margin-left: 20px;
 }
 
-/**
- * ====================================
- * Content Style -- Links
- * ====================================
- */
 
- .top-button {
-  position: fixed; 
-  top: 80%; 
-  right:2%;
- }
 
 /**
  * ====================================
@@ -50,7 +40,8 @@ a {
   height:100px;
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: 0px;
+  display: block;
   background-color: rgb(29, 161, 242);
   color: rgb(254, 254, 254);
 }

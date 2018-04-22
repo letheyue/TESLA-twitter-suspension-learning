@@ -21,13 +21,13 @@ class SearchTwitterView(ListView):
 			return context
 
 	def get_queryset(self, *args, **kwargs):
-		request = self.request
-		method_dict = request.GET
-		query = method_dict.get('content', None) # method_dict['q']
-		if query is not None:
-			print(query)
-			context= {}
-			context['basic_info'] = get_predict(str(query))
-			return context
-
+		# request = self.request
+		# method_dict = request.GET
+		# query = method_dict.get('content', None) # method_dict['q']
+		# if query is not None:
+		# 	print(query)
+		# 	context= {}
+		# 	context['basic_info'] = None
+		# 	return context
+		return None
 

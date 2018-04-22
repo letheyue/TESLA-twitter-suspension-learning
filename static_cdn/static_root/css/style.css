@@ -5,7 +5,7 @@
  */
  body {
     font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;
-    padding-bottom: 100px;
+    padding-bottom: 200px;
 }
 
 a {
@@ -14,7 +14,7 @@ a {
 }
 
 .menu {
-    width: 100%;
+    width: 80%;
     max-width: 200px;
     margin-top: 80px;
     float: left;
@@ -22,9 +22,10 @@ a {
 
 .about-content {
     width: 100%;
-    max-width: 1200px;
-    margin-right: 100px;
+    max-width: 80%;
+    margin-right: 20px;
     float: right;
+    padding-bottom: 100px;
 }
 
 .about-content ul {
@@ -135,4 +136,9 @@ p.italic {
  	background: #b63b4d;
  	color: #FFF;
  }
-
+ 
+ .top-button {
+    position: fixed; 
+    top: 70%; 
+    right:2%;
+}

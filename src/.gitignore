@@ -117,5 +117,8 @@ ENV/
 .mypy_cache/
 
 # ignore model
+predictions/classifier/CNN_best_weights.02-0.8820.hdf5
+predictions/classifier/tokenizer.pickle
+predictions/text_model_cnn.py
 
 templates/team_page.html

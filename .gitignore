@@ -124,7 +124,6 @@ ENV/
 *.csv
 
 # ignore the classifier
-src/predictions/classifier/*
 test/classifier/
 
 # ignore twitter access token
