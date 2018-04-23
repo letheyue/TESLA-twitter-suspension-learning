@@ -85,6 +85,7 @@ def get_tfidf_predict(screen_name, basic_info):
     if test_vec is None:
     	basic_info['prediction_text_label'] = None
     	basic_info['prediction_text_mean'] = None
+    	basic_info['prediction_total'] = basic_info["prediction_account_label"]
     	return basic_info
 
     with open('predictions/classifier/lr.pickle', 'rb') as handle:
