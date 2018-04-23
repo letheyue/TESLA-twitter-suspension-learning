@@ -1,9 +1,13 @@
 import pickle
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 import re
 import os
 import twitter
 from bs4 import BeautifulSoup
 from nltk.tokenize import WordPunctTokenizer
+from keras.models import load_model
+from keras import backend as be
 
 import warnings 
 warnings.filterwarnings("ignore")
@@ -21,6 +25,8 @@ negations_dic = {"isn't":"is not", "aren't":"are not", "wasn't":"was not", "were
                 "mustn't":"must not"}
 neg_pattern = re.compile(r'\b(' + '|'.join(negations_dic.keys()) + r')\b')
 
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
 script_dir = os.path.dirname(__file__)
 
@@ -46,16 +52,15 @@ def get_text(screen_name):
         list_text.append(clean_data)
         if index == 5:
             break
-
-    if len(list_text) == 0:
-    	return None       
+            
     # pre-processing the data
-    with open('predictions/classifier/tvec.pickle', 'rb') as handle:
-    	tvec = pickle.load(handle)
+    with open('predictions/classifier/tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
         
-    test_vec = tvec.transform(list_text)
+    sequences_test = tokenizer.texts_to_sequences(list_text)
+    test_text = pad_sequences(sequences_test, maxlen=45)
 
-    return test_vec
+    return test_text
 
 # pre-processing the text
 def tweet_cleaner_updated(text):
@@ -75,25 +80,21 @@ def tweet_cleaner_updated(text):
     words = [x for x  in tok.tokenize(letters_only) if len(x) > 1]
     return (" ".join(words)).strip()
 
+def get_cnn_predict(screen_name, basic_info):
+    # CNN for text
+    test_text = get_text(screen_name)
 
+    # load the function
+    loaded_CNN_model = load_model('predictions/classifier/CNN_best_weights.02-0.8820.hdf5')
 
-def get_tfidf_predict(screen_name, basic_info):
-    test_vec = get_text(screen_name)
+    # get the prediction value
+    pred_text = loaded_CNN_model.predict(test_text)
+    be.clear_session()
 
-    basic_info['prediction_text_method'] = "Due to the timeout parameter and capacity of Heroku, this is a lighter version using TF-IDF model for predicting the tweets. If you want to see the full version using CNN, please see the code on Github."
-
-    if test_vec is None:
-    	basic_info['prediction_text_label'] = None
-    	basic_info['prediction_text_mean'] = None
-    	return basic_info
-
-    with open('predictions/classifier/lr.pickle', 'rb') as handle:
-        lr_with_tfidf = pickle.load(handle)
-
-    pred_text = lr_with_tfidf.predict_proba(test_vec)
+     # put the prediction of text label into json and get the mean
     basic_info['prediction_text_label'] = list()
     for i in range (0, len(pred_text)):
-        basic_info['prediction_text_label'].append(float("{0:.4f}".format(pred_text[i][1])) * 100)
+        basic_info['prediction_text_label'].append(float("{0:.4f}".format(pred_text[i][0])) * 100)
     if (basic_info['prediction_text_label']):
         basic_info['prediction_text_mean'] = sum(basic_info['prediction_text_label']) / float(len(basic_info['prediction_text_label']))
         basic_info['prediction_total'] = (basic_info["prediction_account_label"] + basic_info['prediction_text_mean']) / 2
@@ -101,6 +102,6 @@ def get_tfidf_predict(screen_name, basic_info):
         basic_info['prediction_text_mean'] = 0
         basic_info['prediction_total'] = basic_info["prediction_account_label"]
 
+    basic_info['prediction_text_method'] = "This is the full version using CNN."
 
     return basic_info
-
