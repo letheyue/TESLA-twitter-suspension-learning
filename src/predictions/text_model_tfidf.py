@@ -80,8 +80,8 @@ def tweet_cleaner_updated(text):
 def get_tfidf_predict(screen_name, basic_info):
     test_vec = get_text(screen_name)
 
-    basic_info['prediction_text_method'] = "Due to the timeout parameter and capacity of Heroku, this is a lighter version using TF-IDF model for predicting the tweets. If you want to see the full version using CNN, please see the code on Github."
-
+    basic_info['prediction_text_method'] = "Due to the timeout parameter and the capacity of Heroku, this is a lighter version using TF-IDF for our tweet model. If you want to see the full version (CNN based), please refer to our code on Github."
+	
     if test_vec is None:
     	basic_info['prediction_text_label'] = None
     	basic_info['prediction_text_mean'] = None
