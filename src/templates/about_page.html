@@ -20,29 +20,44 @@
     <div class="menu">
         <ul id="accordion" class="accordion">
             <li>
-                <div class="link"><i class="fa fa-paint-brush"></i>Introduction</div>
-            </li>
-            <li>
-                <div class="link"><i class="fa fa-code"></i>Related Work<i class="fa fa-chevron-down"></i></div>
+                <div class="link"><a href="#introduction"><i class="fa fa-paint-brush"></i>Introduction</a><i class="fa fa-chevron-down"></i></div>
                 <ul class="submenu">
-                    <li><a href="#">Data Visualization</a></li>
-                    <li><a href="#">Training Models</a></li>
+                    <li><a href="#why">Why TESLA</a></li>
                 </ul>
             </li>
             <li>
-                <div class="link"><i class="fa fa-globe"></i>Analysis</div>
-            </li>
-            <li>
-                <div class="link"><i class="fa fa-paint-brush"></i>Discussion<i class="fa fa-chevron-down"></i></div>
+                <div class="link"><a href="#related"><i class="fa fa-folder-o"></i>Related Work</a><i class="fa fa-chevron-down"></i></div>
                 <ul class="submenu">
-                    <li><a href="#">Challenges</a></li>
-                    <li><a href="#">What We Learnt</a></li>
-                    <li><a href="#">Dark Side</a></li>
-                    <li><a href="#">What's Next</a></li>
+                    <li><a href="#existing">Existing Work</a></li>
+                    <li><a href="#difference">Our Difference</a></li>
                 </ul>
             </li>
             <li>
-                <div class="link"><i class="fa fa-globe"></i>Links</div>
+                <div class="link"><a href="#ourWork"><i class="fa fa-file-code-o"></i>Methods</a><i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#dataVisualization">Data Visualization</a></li>
+                    <li><a href="#trainingModels">Training Framework</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="link"><a href="#analysis"><i class="fa fa-bar-chart-o"></i>Analysis</a><i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#accountModel">Account Model</a></li>
+                    <li><a href="#tweetModel">Tweet Model</a></li>
+                </ul>
+            </li>
+            <li>
+                    <div class="link"><a href="#discussion"><i class="fa fa-commenting-o"></i>Discussion</a><i class="fa fa-chevron-down"></i></div>
+                </a>
+                <ul class="submenu">
+                    <li><a href="#challenges">Challenges</a></li>
+                    <li><a href="#learnt">What We Learnt</a></li>
+                    <li><a href="#negative">Possible Negative Impact</a></li>
+                    <li><a href="#next">What's Next</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="link"><a href="#links"><i class="fa fa-globe"></i>Links</a></div>
             </li>
         </ul>
     </div>
@@ -52,63 +67,204 @@
             <h1>{{ title }}</h1>
         </div>
         
-        <div class="intro">
+        <div class="intro" id="introduction">
             <h3>Introduction</h3>
-            <p>TESLA(TwittEr Spam LeArning) is a course project of Texas A&M University CSCE 670 Information Storage and Retrieval.</p>
+            <p>TESLA(TwittEr Spam LeArning) is a course project of Texas A&M University CSCE 670 Information Storage and Retrieval. The project aims to build a tool to check if a
+                user is a spammer on Twitter.</p>
+            <section id="why">
+                <h5>Why TESLA</h5>
+                <p>Spam can be generally described as unsolicited, repeated actions that negatively impact other people.
+                    As Twitter users, we often see some people we are unfamiliar with intending to follow us or we want to
+                    follow others. But we do not want to follow or be followed by spammers since they may send us
+                    malicious links or hijack our accounts. Therefore, we need to have a tool helping us if these unfamiliar
+                    accounts are spammers.</p>
+                <p>More information:</p>
+            </section>
+            <ul>
+                <li>
+                    <a href="https://www.theverge.com/2016/8/30/12707554/first-click-twitter-spam-is-out-of-control" target="_blank">First Click: Twitter spam is out of control</a>
+                </li>
+                <li>
+                    <a href="https://www.zdnet.com/article/twitter-spam-bot-problem-on-the-rise/" target="_blank">Twitter has a spam bot problem — and it's getting worse</a>
+                </li>
+                <li>
+                    <a href="https://www.cnbc.com/2017/03/10/nearly-48-million-twitter-accounts-could-be-bots-says-study.html" target="_blank">As many as 48 million Twitter accounts aren't people, says study</a>
+                </li>
+            </ul>
         </div>
         <hr>
-        <div class="related-work">
+        <div class="intro" id="related">
             <h3>Related Work</h3>
-            <h5>Data Visualization</h5>
-            <h5>Training Models</h5>
+            <section id="existing">
+                <h5>Existing Work - BotMaker</h5>
+                <p>There have been several research attempts in academia, but as of today, no external commercial
+                        tool is available other than the built-in BotMaker system itself. Twitter has not published the antispammer rules they used in production, 
+                        but brieﬂy describes how the BotMaker system works on their Engineering blog. 
+                <p>Three key principles guided our design of Botmaker:</p>
+                    <ol>
+                        <li>Prevent spam content from being created. </li>
+                        <li>Reduce the amount of time spam is visible on Twitter.</li>
+                        <li>Reduce the reaction time to new spam attacks. </li>
+                    </ol>
+                <p>BotMaker achieves these goals by receiving events from Twitter’s distributed systems, 
+                    inspecting the data according to a set of rules, and then acting accordingly. 
+                    BotMaker rules, or bots as they are known internally, are decomposed into two parts: 
+                    conditions for deciding whether or not to act on an event,
+                    and actions that dictate what the caller should do with this particular event. 
+                </p>
+                <p>According to the blog, it seems that these rules are handcrafted instead of automated. 
+                    In addition, most of the research efforts so far have focused on constructing a streamlined framework built upon a single machine learning classiﬁer.
+                </p>
+                <p>Twitter's BotMaker:</p>
+                <ul>
+                    <li><a href="https://blog.twitter.com/engineering/en_us/a/2014/fighting-spam-with-botmaker.html">Fighting spam with BotMaker</a></li>
+                </ul>
+            </section>
+            <section id="difference">
+                <h5>Our Difference</h5>
+                <p>
+                    Different from BotMaker whose goal is to detect spam tweets when they are created and reduce
+                    spam that the user sees, our goal of building TESLA is to distinguish spam users from genuine users in daily use.
+                    Therefore, we will combine both account features and tweets text features. Then we will user machine 
+                    learning methods to classify users.</p>
+                <p>
+                    To reduce the bias of using a single classiﬁer and further increase the detection accuracy, 
+                    we would like to explore the possibility of aggregating different machine learning algorithms 
+                    as well as applying deep learning at different phases of the learning process.
+                </p>
+            </section>
         </div>
         <hr>
-        <div class="analysis">
+        <div class="our-work" id="ourWork">
+            <h3>Methods</h3>
+            <section id="dataVisualization">
+                <h5>Data Visualization</h5>
+                <p>During our project, to distinguish spam users from genuine users, we first extracted a series of account features and tweets features through data visualization. These features include count of favorite tweets, account age, length of description etc. </p>
+                <img src="{% static 'img/cft.jpg' %}" width=45% height=400 style="margin-left: 28%" alt=""> 
+                <p class="text-center">Figure 1. Count of Favorite Tweets</p>
+                <img src="{% static 'img/aa.jpg' %}" width=45% height=400 style="margin-left: 28%" alt=""> 
+                <p class="text-center">Figure 2. Account Age</p>
+                <img src="{% static 'img/ld.jpg' %}" width=45% height=400 style="margin-left: 28%" alt=""> 
+                <p class="text-center">Figure 3. Length of Description</p>
+                <p>Other features we used:</p>
+                <ul>
+                    <li>Total status count</li>
+                    <li>Default profile image</li>
+                    <li>Default profile</li>
+                    <li>Username, count of characters</li>
+                    <li>Username, count of numbers</li>
+                    <li>Screen name, count of characters</li>
+                    <li>Screen name, count of numbers</li>
+                    <li>Listed count</li>
+                    <li>Description, count of hashtags</li>
+                    <li>Description, count of "@" symbol</li>
+                    <li>Description, count of URLs</li>
+                    <li>Tweet context</li>
+                </ul>
+                <p>For more data visualization results about above listed features, please go to <a href="https://github.com/letheyue/TESLA-twitter-suspension-learning" target="_blank">GitHub</a>.</p>
+            </section>
+            <section id="trainingModels">
+                <h5>Training Framework</h5>
+                <p>Based on the features, we built an ensemble training model consisting of two parts – account model
+                    (which was trained based on user-related features) and tweet model (which was trained based on
+                    context of tweets). As for the account model, we intended to compare the accuracy of different kinds of classifiers, including logistic regression, random forest, SVM and KNN.
+                    From the training accuracy result, we finally chose random forest as our account
+                    model classier. In terms of tweets model, we chose word2vec as tweets model classifier. To get the result, we calculate a weighted
+                    probability and if it is higher than 50%, we consider this user as a spammer.</p>
+                <img src="{% static 'img/training-model.jpg' %}" width=80% height=400 style="margin-left: 10%" alt=""> 
+                <p class="text-center">Figure 4. TESLA Training Model</p>
+            </section>
+        </div>
+        <hr>
+        <div class="analysis" id="analysis">
             <h3>Analysis</h3>
+            <section id="accountModel">
+                <h5>Account Model</h5>
+                <p>Initially, our main data sources come from the <a href="https://botometer.iuni.iu.edu/bot-repository/datasets.html" target="_blank">Bot Repository</a>:
+                    <ul>
+                        <li>Varol-2017, which was released in 2017. It contains 2,573 user IDs crawled in April 2016. We repeatedly called Twitter API to crawl account and tweet information. Despite some suspended accounts, we were able to get information of 2,401 users.</li>
+                        <li>Cresci-2017, annotated by CrowdFlower contributors. We downloded the whole dataset and used the following labels: genuine, social_spambots_1, social_spambots_2, social_spambots_3, traditional_spambots_1, traditional_spambots_2, traditional_spambots_3, and traditional_spambots_4.</p></li>
+                    </ul>
+                <p>At first, our aggregated user dataset was imbalanced. We had ~7,000 labeled spammers and ~5,000 labeled legitimate users. To balance it out, we did not use oversampling/downsampling; rather, we utilized Twitter API again. Our crawler started from President Trump's Twitter account and scraped his friends lists, his friends' following lists, and so on until we collected 2,000 rows of user data. We assume that President Trump is following real users, and his friends follow authentic accounts as well.</p>
+                <p>The test accuracy result of different classifiers we chose is shown below (data ranges from 2014 to 2016):</p>
+                <img src="{% static 'img/table1.jpg' %}" width=70% height=400 style="margin-left: 15%" alt=""> 
+                <p class="text-center">Table 1. Training Result Based on 2014-2016 Data</p>
+                <p>However, although our classifiers showed a high accuracy when testing with original data, after the first actual test, we noticed that our account based model did not perform well. That is because most data was old (except for President Trump's 2000+ records). Thus, we acquired more data using the Twitter API again.</p>    
+                <p>We were able to acquire additional 9,573 spam accounts information using the streaming API. We filtered out tweet streams on 4/15 and 4/16/2018. We used the following keywords, with the assumption that whoever sent a tweet containing this keyword was a spam account: ['make money from home','enter to win','Credit Card', 'lonely', 'debt','deals','ad', '100% free','Act now','apply online','Click below','Click here', 'Extra cash','Offer expires', 'order now','Save $','Serious cash','Satisfaction guaranteed', 'Supplies are limited', 'trial','Work from home','you are a winner','your income','Weight loss','why pay more']. Sources of the spam keywords: 455 Spam Trigger Words to Avoid in 2018, “SPAM Tweets” – 5 Buzzwords that Attract Spammers.</p>
+                <p>We also scraped 9,464 ham user data using the same assumption as the one for President Trump's above, but this time our initial seed is from Dr. Philip Guo, Assistant Professor of Cognitive Science at UC San Diego.</p>      
+                <p>In this way, we were able to gather a balanced user dataset with spammers:legitimate users ratio roughly to be 1:1 (15,731 spammers, 16,828 legitimate users). It is acknowledged that our aggregated dataset may subject to biases. If time permits, we will collect a larger dataset that covers as many groups as possible.</p>
+                <p>The test accuracy result of different classifiers we chose is shown below (data ranges from 2014 to 2018):</p>
+                <img src="{% static 'img/table2.jpg' %}" width=80% height=350 style="margin-left: 10%" alt=""> 
+                <p class="text-center">Table 2. Training Result Based on 2014-2018 Data</p>
+                <p>From Table 2, we observed that the accuracy of classifiers decreased, we suppose there were following reasons: </p>
+                <ul>
+                    <li>Part of our data was still outdated compared with fast-changing spammers.</li>
+                    <li>During the process of acquiring account data, we assumed that a genuine user and his friends all follow genuine users. But actually there might be some people followed spam users.</li>
+                </ul>
+                <p>According to the above accuracy results, we finally chose random forest as our account model which performed well with both data sets. And the actual test result was better than before.</p>
+            </section>
+			<section id="tweetModel">
+                <h5>Tweet Model</h5>
+                <p>Besides the account model, we have also extracted the text field from tweets. For the tweet model, on the first stage, we tried word2vec on the tweet’s text to embed the word corpus. For special information like url and @mention in the tweet text, we chose to delete them considering it would actually pollute the overall corpus. 
+                Then on the second stage, we used the pre-trained embedding weights from word2vec model as a trainable input layer to train an 1-dimensional convolutional network with kernel sizes 1-4 for phrasing semantic. In other word, the model considered not only the word sequence one by one, but also phrases with up to 4 words. 
+                These four types of layers were trained collaterally and concatenated at the end to output the probability of the text being spam or not. The final accuracy was around 88% on the data we used and the online realtime test worked fine as well.</p>
+            </section>
         </div>
         <hr>
-        <div class="discussion">
+        <div class="discussion" id="discussion">
             <h3>Discussion</h3>
-            <h5>Challenges</h5>
-            <p>
-                    In this project, we initially trained our model with data gathered during 2014 to 2016. However, when we used the model to classify current spam users, the accuracy was not satisfying. From this result, we found that Twitter spam users have been changing during the years. As time passes, their features can be a lot different. Therefore, spam topic drift is a challenge for our classifier.
-            </p>
-            <h5>What We Learnt</h5>
-            <p>
-                We believe the problem of data changing is happening in many areas of IR, including search engines as well as recommenders which also involves data training processes to give better accuracy. To deal with this issue, it is apparent that one-time training is not enough. Instead, frequent training with newest data is necessary.
-            </p>
-            <h5>Possible Negative Impact</h5>
-            <ul>
-                <li>
-                    <p class="thick">Privacy:</p> Since this tool relies on users' account information as well as their tweets, there can be some people getting others' information without knowing.
-                </li>
-                <li>
-                    <p class="thick">Spammer's Counter Attack:</p> The system shows the result of our judgement. It is possible that spammers figure out better ways to camouflage themselves.
-                </li>
-                <li>
-                    <p class="thick">Unexpected Killing:</p> Since the precision of our tool can never reach 100%, if it is adopted by Twitter, there might be legitimate user taken as spammers and shut down wrongly.
-                </li>
-            </ul>
-            <h5>What's Next</h5>
-            <ul>
-                <li>
-                    <p class="thick">More targets:</p> We believe similar methods used in this project can be applied to classify other kinds of malicious users, such as those who may be suspended due to various reasons.
-                </li>
-                <li>
-                    <p class="thick">Better scalability:</p> The system can be used for other languages if text features of new languages are available. 
-                </li>
-                <li>
-                    <p class="thick">Form of the app:</p> Currently the app is in the form of a website. We think it would be more convenience for people to use if it is made as a web extension.
-                </li>
-            </ul>
+            <section id="challenges">
+                <h5>Challenges</h5>
+                <p>
+                        In this project, we initially trained our model with data gathered during 2014 to 2016. However, when we used the model to classify current spam users, the accuracy was not satisfying. From this result, we found that Twitter spam users have been changing during the years. As time passes, their features can be a lot different. Therefore, spam topic drift is a challenge for our classifier.
+                </p>
+            </section>
+            <section id="learnt">
+                <h5>What We Learnt</h5>
+                <p>
+                    We believe the problem of data changing is happening in many areas of IR, including search engines as well as recommenders which also involves data training processes to give better accuracy. To deal with this issue, it is apparent that one-time training is not enough. Instead, frequent training with newest data is necessary.
+                </p>
+            </section>
+            <section id="negative">
+                <h5>Possible Negative Impact</h5>
+                <ul>
+                    <li>
+                        <p class="thick">Privacy:</p> Since this tool relies on users' account information as well as their tweets, there can be some people getting others' information without knowing.
+                    </li>
+                    <li>
+                        <p class="thick">Spammer's Counter Attack:</p> The system shows the result of our judgement. It is possible that spammers figure out better ways to camouflage themselves.
+                    </li>
+                    <li>
+                        <p class="thick">Unexpected Killing:</p> Since the precision of our tool can never reach 100%, if it is adopted by Twitter, there might be legitimate user taken as spammers and shut down wrongly.
+                    </li>
+                </ul>
+            </section>
+            <section id="next">
+                <h5>What's Next</h5>
+                <ul>
+                    <li>
+                        <p class="thick">More targets:</p> We believe similar methods used in this project can be applied to classify other kinds of malicious users, such as those who may be suspended due to various reasons.
+                    </li>
+                    <li>
+                        <p class="thick">Better scalability:</p> The system can be used for other languages if text features of new languages are available. 
+                    </li>
+                    <li>
+                        <p class="thick">Form of the app:</p> Currently the app is in the form of a website. We think it would be more convenience for people to use if it is made as a web extension.
+                    </li>
+                </ul>
+            </section>
         </div>
         <hr>
-        <div class="links">
+        <div class="links" id="links">
             <h3>Links</h3>
-            <p><i class="fa fa-github" aria-hidden="true"></i> Our GitHub repository: <a href="https://github.com/letheyue/TESLA-twitter-suspension-learning">GitHub</a></p>
-            <p><i class="fa fa-google" aria-hidden="true"></i> Data set we used: <a href="https://drive.google.com/open?id=1yNUu5uFplskbshQB2ipT63JYBM0pcPH">Data</a></p>
-            <p class="italic">Note: Due to the privacy regulations of Twitter, here we can only present the user ID in part of our data set. If you want to get access to our full data set, please contact us through the email: Rlin225@tamu.edu.</p>
-            <p><i class="fa fa-youtube" aria-hidden="true"></i> Demo video: <a href="#">Video</a></p>
+            <p><i class="fa fa-github" aria-hidden="true"></i> Our GitHub repository: <a href="https://github.com/letheyue/TESLA-twitter-suspension-learning" target="_blank">GitHub</a></p>
+            <p><i class="fa fa-google" aria-hidden="true"></i> Data set we used: 
+                <ul>
+                    <li><a href="https://botometer.iuni.iu.edu/bot-repository/datasets.html" target="_blank">Original Bot Repository - Varol-2017 & Cresci-2017</a></li>
+                    <li><a href="https://drive.google.com/open?id=1yNUu5uFplskbshQB2ipT63JYBM0pcPHC" target="_blank">Data we acquired using Twitter API</a></p></li>
+                    <p class="italic">Note: Due to the privacy regulations of Twitter, here we can only present the user ID in part of our data set. If you want to get access to our full data set, please contact us through the email: Rlin225 [AT] tamu.edu.</p>
+                </ul>
+            <p><i class="fa fa-youtube" aria-hidden="true"></i> Demo video: <a href="https://youtu.be/T9aOL3-tDuM" target="_blank">Video</a></p>
         </div>
             
         
@@ -139,6 +295,7 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
+
 </script>
 
 {% endblock%}

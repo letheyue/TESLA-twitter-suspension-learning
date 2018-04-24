@@ -16,7 +16,7 @@ a {
 .menu {
     width: 80%;
     max-width: 200px;
-    margin-top: 80px;
+	margin-top: 80px;
     float: left;
 }
 
@@ -32,6 +32,10 @@ a {
     list-style-type: square;
 }
 
+img.training-model {
+	margin-left: 10%;
+}
+
 p.thick {
     font-weight: bold;
     display: inline;
@@ -39,6 +43,10 @@ p.thick {
 
 p.italic {
     font-style: italic;
+}
+
+p.center {
+	text-align: center;
 }
 
 /** =======================
@@ -139,6 +147,6 @@ p.italic {
  
  .top-button {
     position: fixed; 
-    top: 70%; 
+    top: 80%; 
     right:2%;
 }
