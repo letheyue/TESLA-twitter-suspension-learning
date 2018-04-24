@@ -52,13 +52,24 @@ def get_predict(screen_name):
 
     feature = get_user(screen_name=screen_name)
 
+    if feature is None:
+        basic_info = dict()
+        basic_info["is_valid"] = False
+        return json.dumps(basic_info)
+
     np_feature = np.asarray((feature))
 
     pred_account = loaded_pickle.predict_proba(np_feature.tolist())
 
-    data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
+    try:
+        data =  api.GetUser(screen_name=screen_name, include_entities=True, return_json=False)
+        basic_info = data._json
+        basic_info["is_valid"] = True
+    except:
+        basic_info = dict()
+        basic_info["is_valid"] = False
+        return json.dumps(basic_info)
     
-    basic_info = data._json
     basic_info['url'] = extend_url(basic_info['url'])
     basic_info['followers_count'] = short_num(basic_info['followers_count'])
     basic_info['friends_count'] = short_num(basic_info['friends_count'])

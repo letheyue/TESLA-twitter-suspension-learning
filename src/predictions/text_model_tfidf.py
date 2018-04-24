@@ -34,7 +34,10 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
 
 # crawl at the text and do pre-process, then change them into vector feature
 def get_text(screen_name):
-    timeline = api.GetUserTimeline(screen_name=screen_name)
+    try:
+        timeline = api.GetUserTimeline(screen_name=screen_name)
+    except:
+        return "Not authorized."
 
     # get the first 5 text
     list_text = list()
@@ -79,6 +82,10 @@ def tweet_cleaner_updated(text):
 
 def get_tfidf_predict(screen_name, basic_info):
     test_vec = get_text(screen_name)
+
+    if isinstance(test_vec, str):
+        basic_info["is_valid"] = False
+        return basic_info
 
     basic_info['prediction_text_method'] = "Due to the timeout parameter and the capacity of Heroku, this is a lighter version using TF-IDF for our tweet model. If you want to see the full version (CNN based), please refer to our code on Github."
 	

@@ -8,28 +8,32 @@
 {% block content %}
 <div class="body">
     <div class="col-md-12">
-        <h3>{{basic_info.prediction_text_method}}</h3>
-        <br>
-		<h2>The basic information of the user you've searched: </h2><br>
-		<img align="left" src={{basic_info.pp}} style = "width:240px;height:240px"} hspace="20">
-		<div>
-			<h3> {{basic_info.name}} </h3>
-            <a href={{basic_info.pl}} target="_blank"> @{{basic_info.screen_name}} </a>
-            <p> {{basic_info.description}} </p>
-            <p> {{basic_info.location}} </p>
-            <p>{% if basic_info.url%} <a href={{basic_info.url}}> {{basic_info.url}}{% endif %}</a></p>
-            <p> <b>{{basic_info.friends_count}}</b> Following &nbsp; &nbsp; &nbsp; <b>{{basic_info.followers_count}}</b> Followers</p>
-		</div>
-		<br style="clear:left;"><br>
-		<div>
-            <p> Based on our model, this user is <b>{{basic_info.prediction_total}}%</b> spam {% if basic_info.prediction_total < 50 %} (<b>Genuine</b>){% else %} (<b>Spam</b>){% endif %}</p>
-            <p> Account features: <b>{{basic_info.prediction_account_label}}%</b> spam</p>
-            <p> Tweet features: 
-                {% for obj in basic_info.prediction_text_label %}
-                    {{forloop.counter}}. <b>{{obj}}%</b> spam
-                {% endfor %}
-            </p>
-        </div>
+        {% if basic_info.is_valid %}
+            <h3>{{basic_info.prediction_text_method}}</h3>
+            <br>
+    		<h2>The basic information of the user you've searched: </h2><br>
+    		<img align="left" src={{basic_info.pp}} style = "width:240px;height:240px"} hspace="20">
+    		<div>
+    			<h3> {{basic_info.name}} </h3>
+                <a href={{basic_info.pl}} target="_blank"> @{{basic_info.screen_name}} </a>
+                <p> {{basic_info.description}} </p>
+                <p> {{basic_info.location}} </p>
+                <p>{% if basic_info.url%} <a href={{basic_info.url}}> {{basic_info.url}}{% endif %}</a></p>
+                <p> <b>{{basic_info.friends_count}}</b> Following &nbsp; &nbsp; &nbsp; <b>{{basic_info.followers_count}}</b> Followers</p>
+    		</div>
+    		<br style="clear:left;"><br>
+    		<div>
+                <p> Based on our model, this user is <b>{{basic_info.prediction_total}}%</b> spam {% if basic_info.prediction_total < 50 %} (<b>Genuine</b>){% else %} (<b>Spam</b>){% endif %}</p>
+                <p> Account features: <b>{{basic_info.prediction_account_label}}%</b> spam</p>
+                <p> Tweet features: 
+                    {% for obj in basic_info.prediction_text_label %}
+                        {{forloop.counter}}. <b>{{obj}}%</b> spam
+                    {% endfor %}
+                </p>
+            </div>
+        {% else %}
+            <h2>The user you've searched has been suspended or doesn't exist or has locked his/her account.</h2>
+        {% endif %}
     </div>
 </div>
 <br>

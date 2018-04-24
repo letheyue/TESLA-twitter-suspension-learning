@@ -40,7 +40,10 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
 
 # crawl at the text and do pre-process, then change them into vector feature
 def get_text(screen_name):
-    timeline = api.GetUserTimeline(screen_name=screen_name)
+    try:
+        timeline = api.GetUserTimeline(screen_name=screen_name)
+    except:
+        return "Not authorized."
 
     # get the first 5 text
     list_text = list()
@@ -83,6 +86,11 @@ def tweet_cleaner_updated(text):
 def get_cnn_predict(screen_name, basic_info):
     # CNN for text
     test_text = get_text(screen_name)
+
+    
+    if isinstance(test_text, str):
+        basic_info["is_valid"] = False
+        return basic_info
 
     # load the function
     loaded_CNN_model = load_model('predictions/classifier/CNN_best_weights.02-0.8820.hdf5')

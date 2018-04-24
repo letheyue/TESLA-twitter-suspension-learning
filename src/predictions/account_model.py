@@ -20,8 +20,11 @@ def get_user(user_id=None, screen_name=None):
                      access_token_key=ACCESS_TOKEN_KEY,
                      access_token_secret=ACCESS_TOKEN_SECRET)
 
-    json = api.GetUser(user_id=user_id, screen_name=screen_name, include_entities=True, return_json=False)
-    json_data = json._json
+    try:
+        json = api.GetUser(user_id=user_id, screen_name=screen_name, include_entities=True, return_json=False)
+        json_data = json._json
+    except:
+        return None
     
     # feature Count of favorite tweets
     Count_of_favorite_tweets = int(json_data['favourites_count'])
