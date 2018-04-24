@@ -31,7 +31,11 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
 def extend_url(url):
     if url is None:
         return None
-    return requests.get(url).url
+    try:
+        request = requests.get(url)
+        return request.url
+    except:
+        return None
 
 def short_num(num):
     if (num/1000000 > 1):

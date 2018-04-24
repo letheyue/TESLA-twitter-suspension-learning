@@ -135,3 +135,5 @@ src/Tesla/aws
 # ignore team info
 src/templates/team_page.html
 src/templates/team_pagen.html
+
+static_cdn
