@@ -26,6 +26,13 @@ Once everything is installed, stay in the *src* folder and type:
 python manage.py runserver
 ```
 
+Note: you might encounter an **ImportError** claiming that there's no module called 'Tesla.aws'. That is because our team uses AWS as part of the storage. Simply uncomment the following line in the **\src\Tesla\settings\base.py** file:
+
+```Python
+# Comment this line please
+from Tesla.aws.conf import *
+```
+
 You should be able to access our application in a local mode.
 ### Switching between different text models
 We have trained two models for the tweet feature: **TF-IDF** and **CNN**. The latter one is too big to load on a Heroku free dyno. Thus, our online app runs the **TF-IDF** model by default. When you download our repository and run it in the local server mode, it's defaulted to run **CNN**. If you'd like to switch to another model, change the following lines in the **\src\predictions\models.py**:
